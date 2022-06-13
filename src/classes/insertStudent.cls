@@ -1,3 +1,3 @@
-public class insertStudent {
+public class InsertStudent {
 
 }

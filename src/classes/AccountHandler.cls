@@ -12,3 +12,9 @@ public class AccountHandler {
         return acct;
     }
 }
+
+/*
+Execution - AccountHandler.insertNewAccount('Zaheer1');
+
+Output - 13:38:02:014 USER_DEBUG [6]|DEBUG|Executed
+ */

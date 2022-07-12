@@ -7,3 +7,8 @@ public class ContactSearch {
         return myContacts;
     }
 }
+/*
+Execute -  ContactSearch.searchForContacts('Young','66045');
+
+Output - [5]|DEBUG|(Contact:{Name=Andy Young, Id=0035i000006KjKjAAK})
+*/

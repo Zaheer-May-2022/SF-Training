@@ -12,7 +12,7 @@ trigger ClosedOpportunityTrigger on Opportunity (after insert, after update) {
     for (Opportunity opp : [SELECT Id, Name, StageName FROM Opportunity WHERE Id IN :Trigger.New]) {
         if(opp.StageName == 'Closed Won') {
             //oppList.add(opp);
-            taskList.add(new Task(Subject =  'Follow Up Test Task',
+            taskList.add(new Task(Subject = 'Follow Up Test Task',
                                   WhatId = opp.Id)
                         );      
         }
@@ -20,4 +20,14 @@ trigger ClosedOpportunityTrigger on Opportunity (after insert, after update) {
     //insert oppList;
     //if(taskList.size() > 0)
     insert taskList;
+    System.debug('Task Added Successfully' + taskList);
 }
+
+/*
+Opportunity a = new Opportunity();
+a.StageName = 'Closed Won';
+Date myDate = date.newInstance(2022,07,21);
+a.CloseDate = myDate;
+a.Name = 'Bill';
+insert a;
+ */

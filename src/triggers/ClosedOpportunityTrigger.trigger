@@ -30,4 +30,8 @@ Date myDate = date.newInstance(2022,07,21);
 a.CloseDate = myDate;
 a.Name = 'Bill';
 insert a;
+
+
+Outpuy 
+USER_DEBUG [23]|DEBUG|Task Added Successfully(Task:{Subject=Follow Up Test Task, WhatId=0065i000005RQ19AAG, Id=00T5i00000YhTkWEAV})
  */

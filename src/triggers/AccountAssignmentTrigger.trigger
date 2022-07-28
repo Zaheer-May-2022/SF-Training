@@ -3,6 +3,8 @@ Purpose : Trigger for Sending mail to newly created account
 Created By : Zaheer Khan
 Created Date : 20-07-22 
 Revision Log : 01, 02
+Modify on : 27-07-22
+Modify by : Zaheer Khan
  */
 
 trigger AccountAssignmentTrigger on Account (before insert, after insert) {
@@ -13,3 +15,4 @@ trigger AccountAssignmentTrigger on Account (before insert, after insert) {
     AccountTriggerAssignmentHelper.emialSender(Trigger.New);
   }
 }
+

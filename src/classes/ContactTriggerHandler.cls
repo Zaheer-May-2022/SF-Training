@@ -1,3 +1,9 @@
+/**
+ * Purpose : Create a Automation on Contact to handle status fields.
+ * Created By : ZAHEER KHAN
+ * Created Date : 12-08-2022
+ */
+
 public with sharing class ContactTriggerHandler {
     
     public static void syncData(List<Contact> newList) {

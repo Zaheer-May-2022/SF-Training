@@ -16,7 +16,6 @@ public with sharing class OpportunityTriggerHelper {
     public static Set<String> noSenSet = new Set<String>();
     public static List<String> allNames = new List<String>();
 
-
     //#String Shortner
     public static void stringShortner(Map<Id,Opportunity> mapIdOpportunity) {
         
@@ -72,6 +71,11 @@ public with sharing class OpportunityTriggerHelper {
     
     //#automobileInstance
     public static void automobileInstance(Map<Id,Opportunity>oldMapInstance, List<Opportunity> newOppList) {
+
+        List<Automobile_Sensor__c> upAutoSensor = new List<Automobile_Sensor__c>();
+        List<Automobile_Presence_Sensor__c> upAutoPreSensor = new List<Automobile_Presence_Sensor__c>();
+        List<Automobile_Tag__c> upAutoTag = new List<Automobile_Tag__c>();
+        List<Automobile_TDU__c> upAutoTDU = new List<Automobile_TDU__c>();
         
         List<String> stagesList = new List<String>{'Shipped to Customer', 'Return to HQ', 'Return to Customer'};
         Set<Id> instanceSet = new Set<Id>();
@@ -91,7 +95,6 @@ public with sharing class OpportunityTriggerHelper {
                     }
                 }
             }
-            
             else if(oldMapInstance == null) {
                 if(stagesList.contains(upOpp.StageName)) {
                     if(upOpp.StageName == 'Shipped to Customer' || upOpp.StageName == 'Return to Customer') {
@@ -103,29 +106,19 @@ public with sharing class OpportunityTriggerHelper {
                 }
             }
         }// newOppList loop
-
-        // ############# create records based on names by StringShortner Class
-        // List<SObject> automobileNewInstance = new List<SObject>;
-        // automobileNewInstance = stringShortner.shortner(mapIdOpportunity, String Automobile_Tag_Details_1__c);
-        // stringShortner.shortner(mapIdOpportunity, String Automobile_Tag_Details_2__c);
-        // stringShortner.shortner(mapIdOpportunity, String Automobile_Tag_Details_3__c);
-        // stringShortner.shortner(mapIdOpportunity, String Return_To_HQ__c);
         
         //############# stringShortner Method
         stringShortner(mapIdOpportunity);
 
         // #creating new records
-        if (!autoPreSensor.isEmpty()) {
-            insert autoPreSensor;
-        }
-        if (!autoSensor.isEmpty()) {
-            insert autoSensor;
-        }
-        if (!autoTag.isEmpty()) {
-            insert autoTag;
-        }
-        if (!autoTDU.isEmpty()) {
-            insert autoTDU;
+        List<SObject> insertSObject = new List<sObject>();
+        insertSObject.addAll(autoPreSensor);
+        insertSObject.addAll(autoSensor);
+        insertSObject.addAll(autoTag);
+        insertSObject.addAll(autoTDU);
+
+        if (!insertSObject.isEmpty()) {
+            insert insertSObject;
         }
 
         //#get all data by query
@@ -133,11 +126,6 @@ public with sharing class OpportunityTriggerHelper {
         List<Automobile_Presence_Sensor__c> autoPreSensorRecQryData1 = [Select Id, Name, Account__c, Opportunity__c From Automobile_Presence_Sensor__c Where Opportunity__c In :instanceSet];
         List<Automobile_Tag__c> autoTagQryData1 = [Select Id, Name, Account__c, Opportunity__c From Automobile_Tag__c Where Opportunity__c In :instanceSet];
         List<Automobile_TDU__c> autoTDUQryData1 = [Select Id, Name, Account__c, Opportunity__c From Automobile_TDU__c Where Opportunity__c In :instanceSet];
-
-        List<Automobile_Sensor__c> upAutoSensor = new List<Automobile_Sensor__c>();
-        List<Automobile_Presence_Sensor__c> upAutoPreSensor = new List<Automobile_Presence_Sensor__c>();
-        List<Automobile_Tag__c> upAutoTag = new List<Automobile_Tag__c>();
-        List<Automobile_TDU__c> upAutoTDU = new List<Automobile_TDU__c>();
 
         //############### update there account with new by condition
         for(Automobile_Sensor__c auS : autoSensorQryData1) {
@@ -221,21 +209,19 @@ public with sharing class OpportunityTriggerHelper {
         }
 
         // Update changed stage data
-        if (!upAutoPreSensor.isEmpty()) {
-            update upAutoPreSensor;    
-        }
-        if (!upAutoSensor.isEmpty()) {
-            update upAutoSensor;
-        }
-        if (!upAutoTag.isEmpty()) {
-            update upAutoTag;
-        }
-        if (!upAutoTDU.isEmpty()) {
-            update upAutoTDU;    
+        List<SObject> updateSObject = new List<sObject>();
+        updateSObject.addAll(upAutoPreSensor);
+        updateSObject.addAll(upAutoSensor);
+        updateSObject.addAll(upAutoTag);
+        updateSObject.addAll(upAutoTDU);
+
+        if (!updateSObject.isEmpty()) {
+            update updateSObject;    
         }
 
         //#Email send on successful and unsuccessful
         List<Messaging.SingleEmailMessage> messages = new List<Messaging.SingleEmailMessage>();
+
         for(Opportunity opp : newOppList) {
             String oppOwner = opp.OwnerId;
             String oppName = opp.Name;
@@ -279,8 +265,4 @@ public with sharing class OpportunityTriggerHelper {
         System.debug('Result' + results);
 
     } // automobileInstance method ended
-
-    //#if detail get data check that data and create new if not
-    //#send email on updation
-
 }//main

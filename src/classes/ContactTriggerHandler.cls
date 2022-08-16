@@ -41,6 +41,9 @@ public with sharing class ContactTriggerHandler {
                 }
             }
         }
+        // if(!conList.isEmpty()) {
+        //     insert conList;
+        // }
     }
 }
 

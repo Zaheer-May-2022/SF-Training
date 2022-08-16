@@ -2,12 +2,19 @@
  * Purpose : Create a Automation for counting total district for state
  * Created By : ZAHEER KHAN
  * Created Date : 11-08-2022
- * Revision Logs : V_1.0 - Created By : ZAHEER KHAN - 11-08-2022
+ * Revision Logs : V_1.0 - 
  */
 
 public with sharing class DistrictTriggerHandler {
 
+    public class States {
+        public string stateName{get; set;}
+        public Integer Total_Number_Of_Districts{get; set;}
+    }
+
     public static void dataManipulation(List<District__c> oldList, List<District__c> newList) {
+
+        States wrapState;
 
         List<Integer> stateDisCount = new List<Integer>();
         List<State__c> totalDisInSt = new List<State__c>();
@@ -16,7 +23,7 @@ public with sharing class DistrictTriggerHandler {
         Set<Id> stateName = new Set<Id>();
         Set<Id> countryName = new Set<Id>();
 
-        if(newList == null) {
+        if(newList == null && oldList != null){
             System.debug('Some District are Deleted');
             for(District__c dis : OldList) {
                 Id state = dis.State__c;
@@ -25,7 +32,7 @@ public with sharing class DistrictTriggerHandler {
                 countryName.add(country);
             }
         }
-        else if (newList.size() > 0) {
+        else if (newList != null) {
             for(District__c dis : newList) {
                 Id state = dis.State__c;
                 stateName.add(state);
@@ -56,6 +63,12 @@ public with sharing class DistrictTriggerHandler {
         Integer i = 0;
         for(State__c st : presSt) {
             st.Total_Number_of_Districts__c = stateDisCount[i++];
+            wrapState = new States();
+            wrapState.stateName = st.Name;
+            wrapState.Total_Number_of_Districts = (Integer)st.Total_Number_of_Districts__c;
+            String jsonStateData = JSON.serialize(wrapState);
+            System.debug('State JSON: ' + jsonStateData);
+            st.State_JSON_Data__c = jsonStateData;
             totalDisInSt.add(st);
         }
 

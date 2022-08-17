@@ -10,13 +10,20 @@ public with sharing class StateTriggerHandler {
     public class Country {
 
         public String countryName{get; set;}
+        public List<States> states{get; set;}
         public Integer Total_Number_Of_States{get; set;}
+        public Integer Total_Number_Of_Districts{get; set;}
+    }
+
+    public class States {
+        public string stateName{get; set;}
         public Integer Total_Number_Of_Districts{get; set;}
     }
 
     public static void dataManipulation(List<State__c> oldList, List<State__c> newList) {
 
         Country wrapCon;
+        States wrapSt;
 
         List<Integer> totalStatePerCoun = new List<Integer>();
         List<Country__c> totalStInCon = new List<Country__c>();
@@ -46,13 +53,24 @@ public with sharing class StateTriggerHandler {
         // Fetch Country Like Set
         List<Country__c> presCoun = [SELECT Id, Name, Total_Number_of_States__c, Total_Number_of_Districts__c From Country__c WHERE Id In :countryName]; // Total  Country as per State Inserted.
 
+        List<State__c> allStates = [SELECT Id, Name, Total_Number_of_Districts__c FROM State__c WHERE Country__c In :countryName];
+
         Integer i = 0;
         for(Country__c country : presCoun) {
             country.Total_Number_of_States__c = totalStatePerCoun[i++];
             wrapCon = new Country();
             wrapCon.countryName = country.Name;
+            wrapCon.states = new List<States>();
             wrapCon.Total_Number_Of_States = (Integer)country.Total_Number_of_States__c;
             wrapCon.Total_Number_Of_Districts = (Integer)country.Total_Number_of_Districts__c;
+
+            for(State__c state : allStates) {
+                wrapSt = new States();
+                wrapSt.stateName = state.Name;
+                wrapSt.Total_Number_Of_Districts = (Integer)state.Total_Number_of_Districts__c;
+                wrapCon.states.add(wrapSt);
+            }
+
             String jsonCounData = JSON.serialize(wrapCon);
             System.debug('Country JSON: ' + jsonCounData);
             country.Country_JSON_Data__c = jsonCounData;

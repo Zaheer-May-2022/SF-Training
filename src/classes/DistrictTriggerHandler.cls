@@ -9,12 +9,18 @@ public with sharing class DistrictTriggerHandler {
 
     public class States {
         public string stateName{get; set;}
+        public List<Districts> districts{get; set;}
         public Integer Total_Number_Of_Districts{get; set;}
+    }
+
+    public class Districts {
+        public String districtName{get; set;}
     }
 
     public static void dataManipulation(List<District__c> oldList, List<District__c> newList) {
 
         States wrapState;
+        Districts wrapDis;
 
         List<Integer> stateDisCount = new List<Integer>();
         List<State__c> totalDisInSt = new List<State__c>();
@@ -60,11 +66,21 @@ public with sharing class DistrictTriggerHandler {
         // Fetch State Like Set
         List<State__c> presSt = [Select Id, Name, Total_Number_of_Districts__c From State__c Where Id In :stateName]; // State as per District Inserted.
 
+        List<District__c> allDistrict = [SELECT Id, Name FROM District__c WHERE State__c In :stateName];
+
         Integer i = 0;
         for(State__c st : presSt) {
             st.Total_Number_of_Districts__c = stateDisCount[i++];
             wrapState = new States();
             wrapState.stateName = st.Name;
+            wrapState.districts = new List<Districts>();
+
+            for(District__c district : allDistrict) {
+                wrapDis = new Districts();
+                wrapDis.districtName = district.Name;
+                wrapState.districts.add(wrapDis);
+            }
+
             wrapState.Total_Number_of_Districts = (Integer)st.Total_Number_of_Districts__c;
             String jsonStateData = JSON.serialize(wrapState);
             System.debug('State JSON: ' + jsonStateData);

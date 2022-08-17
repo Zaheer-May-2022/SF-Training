@@ -8,13 +8,11 @@ public with sharing class ContactTriggerHandler {
     
     public static void syncData(List<Contact> newList) {
 
-        // List<Contact> conList = new List<Contact>();
         Set<Id> accSet = new Set<Id>();
 
         for(Contact conAcc : newList) {
             accSet.add(conAcc.AccountId);
         }
-
         List<Account> fetchAccList = [SELECT ID, Status__c, Property__r.Status__c FROM Account Where Id In :accSet];
         
         for(Contact con : newList) {
@@ -22,16 +20,10 @@ public with sharing class ContactTriggerHandler {
                 for(Account account : fetchAccList) {
                     if(con.AccountId == account.ID) {
                         if(account.Status__c != null) {
-                            // Contact addCon = new Contact();
-                            // addCon.Status__c = account.Status__c;
-                            // conList.add(addCon);
                             con.Status__c = account.Status__c;
                             System.debug('Contact Status:======= ' + con.Status__c);
                         }
                         else if(account.Status__c == null) {
-                            // Contact addCon = new Contact();
-                            // addCon.Status__c = account.Property__r.Status__c;
-                            // conList.add(addCon);
                             con.Status__c = account.Property__r.Status__c;
                             account.Status__c = account.Property__r.Status__c;
                             System.debug('Contact Status:======== ' + con.Status__c);
@@ -41,9 +33,6 @@ public with sharing class ContactTriggerHandler {
                 }
             }
         }
-        // if(!conList.isEmpty()) {
-        //     insert conList;
-        // }
     }
 }
 

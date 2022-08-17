@@ -24,10 +24,12 @@ public with sharing class ContactTriggerHandler {
                             System.debug('Contact Status:======= ' + con.Status__c);
                         }
                         else if(account.Status__c == null) {
-                            con.Status__c = account.Property__r.Status__c;
-                            account.Status__c = account.Property__r.Status__c;
-                            System.debug('Contact Status:======== ' + con.Status__c);
-                            System.debug('Account Status:======== ' + account.Status__c);
+                            if(account.Property__r.Status__c != null) {
+                                con.Status__c = account.Property__r.Status__c;
+                                account.Status__c = account.Property__r.Status__c;
+                                System.debug('Contact Status:======== ' + con.Status__c);
+                                System.debug('Account Status:======== ' + account.Status__c);
+                            }
                         }
                     }
                 }

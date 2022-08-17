@@ -1,7 +1,7 @@
 /**
  * Purpose : Create a Automation for counting total district for state
  * Created By : ZAHEER KHAN
- * Created Date : 11-08-2022
+ * Created Date : 10-08-2022
  * Revision Logs : V_1.0 - 
  */
 
@@ -56,7 +56,7 @@ public with sharing class DistrictTriggerHandler {
         }
         System.debug('Total District in State::::::::' + stateDisCount);
 
-        List<AggregateResult> listOfAggrDisCoun = [SELECT COUNT(Name)total_District_For_Country FROM District__c Where State__r.Country__c In :countryName  Group By State__r.Country__r.Name];
+        List<AggregateResult> listOfAggrDisCoun = [SELECT COUNT(Name)total_District_For_Country FROM    District__c Where State__r.Country__c In :countryName  Group By State__r.Country__r.Name];
 
         for(AggregateResult agr : listOfAggrDisCoun) {
             counDisCount.add((Integer)agr.get('total_District_For_Country'));

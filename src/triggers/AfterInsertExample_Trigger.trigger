@@ -23,7 +23,7 @@ trigger AfterInsertExample_Trigger on Account (after insert) {
         messages.add(mail);
     }
     // Messaging.sendEmail(messages);
-    Messaging.SendEmailResult[] results = Messaging.sendEmail(  messages );
+    Messaging.SendEmailResult[] results = Messaging.sendEmail( messages );
     System.debug('Result' + results);
 }
 

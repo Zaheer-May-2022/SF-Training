@@ -1,0 +1,32 @@
+<template>
+
+  <div class="slds-var-m-around_medium">
+    <lightning-quick-action-panel title="Quick Action Title">
+
+      <!-- MiniStatment Preview -->
+      <h1 class="slds-modal__title">Mini Statement</h1>
+      <lightning-combobox name="progress"
+              label="Select Transaction Status"
+              value={transLimit_Ref}
+              placeholder="Select Progress"
+              options={options}
+              onchange={handle_Option_Value}>
+      </lightning-combobox>
+
+      <!-- DataTable -->
+      <div style="height: 500px;">
+        <template if:true={dataList}>
+          <lightning-datatable key-field="id" data={dataList} columns={columns}>
+          </lightning-datatable>
+        </template>
+      </div>
+
+      <!-- Quick Action Close Button -->
+      <div slot="footer">
+        <lightning-button variant="brand" label="OK" 
+        onclick={handleClick}></lightning-button>
+            <lightning-button variant="neutral" label="Cancel" onclick={closeAction}></lightning-button>
+      </div>
+  </lightning-quick-action-panel>
+  </div>
+</template>

@@ -1,0 +1,52 @@
+<template>
+  <div class="slds-var-m-around_medium">
+    <lightning-quick-action-panel title="Quick Action Title">
+      <h1 class="slds-modal__title">Statement</h1>
+
+      <lightning-input type="date" variant="standard" name="StartDate" label="Starting Date" placeholder="Select Start Date" onchange={handleOnChange} value={startDate}></lightning-input>
+
+      <lightning-input type="date" variant="standard" name="EndDate" label="End Date" placeholder="Select End Date" onchange={handleOnChange} value={endDate}></lightning-input>
+
+      <lightning-radio-group title="Data Formate" if:true={dataList} name="radioGroup"
+                          label="Downlodable Format"
+                          options={options}
+                          value={value}
+                          type="radio" onclick={downloadData} required="required">
+      </lightning-radio-group>
+
+      <lightning-radio-group title="Data Formate" if:true={dataList} name="radioGroup"
+                          label="Downlodable Format"
+                          options={options1}
+                          value={value}
+                          type="radio" onclick={downloadDataPdf} required="required">
+      </lightning-radio-group>
+
+      <!-- <lightning-radio-group title="Data Formate" if:true={dataList} name="radioGroup"
+                          label="CSV"
+                          value="option1"
+                          type="radio" onclick={downloadData}>
+      </lightning-radio-group>
+
+      <lightning-radio-group title="Data Formate" if:true={dataList} name="radioGroup"
+                          label="PDF"
+                          value="option2"
+                          type="radio" onclick={downloadData}>
+      </lightning-radio-group> -->
+
+      
+      <!-- <div class="slds-box slds-theme--default">
+        Click on the link Below to Export data as csv/xls.
+        <p class="slds-m-top--large">
+            <lightning-button variant="brand" label="Export Contact data" title="Export Contact Data" onclick={exportContactData}></lightning-button>
+        </p>
+    </div> -->
+
+      <!-- Quick Action Close Button -->
+      <div slot="footer">
+        <lightning-button variant="brand" label="OK" 
+        onclick={handleClick}></lightning-button>
+            <lightning-button variant="neutral" label="Cancel" onclick={closeAction}></lightning-button>
+      </div>
+    </lightning-quick-action-panel>
+  </div>
+</template>

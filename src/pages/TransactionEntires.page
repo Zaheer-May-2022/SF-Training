@@ -1,0 +1,57 @@
+<apex:page controller="TransactionEntryController">
+    <apex:form >
+        <apex:pageBlock title="A Block Title">
+            <apex:pageMessages />
+            <apex:pageBlockSection columns="1">
+                
+                <p><b>Search Transactions:</b></p>
+                <apex:selectList id="select"  multiselect="False" value="{!selectedFields}" size="1" onclick="{!passValueToController}">
+                    <apex:selectOptions value="{!items}" id="field"/>
+                    <apex:actionSupport event="onclick" reRender="otherPanel" action="{!passValueToController}"/>
+                </apex:selectList>
+                    
+                <apex:outputPanel id="otherPanel">
+                <apex:pageBlockSection >
+                    <apex:inputText rendered="{!fieldValue == 'name'}" label="Tx Entry Name" id="values"  value="{! name }"/>
+                    <!-- <apex:inputText rendered="{!fieldValue == 'amount_In_Between'}" label="Amount" value="{! amount_In_Between }"/> -->
+                    <!-- <apex:inputText rendered="{!fieldValue == 'date_In_Between'}" label="Transaction Date" value=""/>-->
+                    <!--<apex:inputField rendered="{!fieldValue == 'status'}" label="Status" value="{! transaction_Entry.Status__c }"/>-->
+                    <apex:inputText rendered="{!fieldValue == 'contact_Name'}" label="Contact Name" value="{! contact_Name }"/>
+                    <apex:selectList rendered="{!fieldValue == 'status'}" multiselect="False" value="{!chooseStatus}" size="1">
+                        <apex:selectOptions value="{!statuslst}" />
+                        <apex:actionSupport reRender="true" event="onclick" action="{!selectStatus}"/>
+                    </apex:selectList> 
+                    <apex:outputPanel rendered="{!fieldValue == 'amount_In_Between'}">
+                        <apex:pageBlockSection >
+                            <apex:inputText label="From Amount" value="{! minAmount }"></apex:inputText><p/>
+                            <apex:inputText label="To Amount" value="{! maxAmount }"></apex:inputText>
+                        </apex:pageBlockSection>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!fieldValue == 'date_In_Between'}">
+                        <apex:pageBlockSection >
+                            <apex:inputText label="From Date" value="{! startDate }"></apex:inputText><p/>
+                            <apex:inputText label="To Date" value="{! endDate }"></apex:inputText>
+                        </apex:pageBlockSection>
+                    </apex:outputPanel>
+                    
+                </apex:pageBlockSection>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!executeSearch}" value="Search" />
+            </apex:pageBlockButtons>
+            
+        </apex:pageBlock>
+    </apex:form>
+    
+    <apex:pageBlock title="Entries">
+        <apex:pageBlockTable value="{!entries}" var="transactions">
+            <apex:column value="{!transactions.Name}"/>
+            <apex:column value="{! transactions.Amount__c}"/>
+            <apex:column value="{! transactions.Transaction_Date__c }"/>
+            <apex:column value="{! transactions.Status__c}"/>
+            <apex:column value="{! transactions.Contact__r.Name }"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock> 
+</apex:page>

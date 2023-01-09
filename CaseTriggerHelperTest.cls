@@ -2,22 +2,15 @@
  * @description       : 
  * @author            : Zaheer Khan
  * @group             : 
- * @last modified on  : 01-02-2023
+ * @last modified on  : 01-09-2023
  * @last modified by  : Zaheer Khan
 **/
 @IsTest (SeeAllData = false)
 public with sharing class CaseTriggerHelperTest {
     @TestSetup
-    static void setup() {
-        List<Case> cases = new List<Case>();
-        for(Integer i = 0; i< 10; i++) {
+    static void setupCaseTriggerHelper() {
 
-            Case c = new Case();
-            c.Origin = 'Phone';
-            c.Subject = 'Test Case Subject' + i;
-            cases.add(c);
-        }
-
+        List<Case> cases = TestFactory.createCaseList(10, false);
         cases.add(new Case(Origin = 'Phone', subject = 'Out of Office'));
 
         if(!cases.isEmpty()) {
@@ -30,13 +23,12 @@ public with sharing class CaseTriggerHelperTest {
         
         CaseTriggerHelper c = new CaseTriggerHelper();
 
-        List<Case> allCases = [SELECT ID, CaseNumber, Subject, Origin from Case LIMIT 11];
+        List<Case> allCases = [SELECT ID, CaseNumber, Subject, Origin from Case LIMIT 10];
 
         Test.startTest();
-        CaseTriggerHelper.caseDeletion(allCases);
+            CaseTriggerHelper.caseDeletion(allCases);
         Test.stopTest();
-        System.debug('AllCases'+ allCases);
-        System.debug('Size' + allCases.size());
-        System.assertEquals(true, allCases.size()>0, 'it should return true check the data ');
+
+        System.assertEquals(10, allCases.size(), 'There should be 10 cases');
     }
 }

@@ -12,7 +12,8 @@ public with sharing class CaseTriggerHelperTest {
 
         List<Case> cases = TestFactory.createCaseList(10, false);
         cases.add(new Case(Origin = 'Phone', subject = 'Out of Office'));
-
+		
+        system.debug('cases : ' + cases);
         if(!cases.isEmpty()) {
             insert cases;
         }
@@ -23,12 +24,13 @@ public with sharing class CaseTriggerHelperTest {
         
         CaseTriggerHelper c = new CaseTriggerHelper();
 
-        List<Case> allCases = [SELECT ID, CaseNumber, Subject, Origin from Case LIMIT 10];
+        List<Case> allCases = [SELECT ID, CaseNumber, Subject, Origin from Case LIMIT 11];
 
         Test.startTest();
             CaseTriggerHelper.caseDeletion(allCases);
         Test.stopTest();
 
-        System.assertEquals(10, allCases.size(), 'There should be 10 cases');
+        List<Case> remainingCases = [SELECT ID, CaseNumber, Subject, Origin from Case LIMIT 11];
+        System.assertEquals(10, remainingCases.size(), 'There should be 10 cases remaining after the delete method is called as per the test case data');
     }
 }

@@ -2,20 +2,18 @@
  * @description       : 
  * @author            : Zaheer Khan
  * @group             : 
- * @last modified on  : 01-04-2023
+ * @last modified on  : 01-12-2023
  * @last modified by  : Zaheer Khan
 **/
 @isTest
-public class CloneListUtilTest {
+public class CloneListUtilTest {    
 
     @testSetup
     private static void cloneListUtilTestSetup() {
         
-        Account account = new Account(Name = 'Test Account', Account_Status__c = 'in Progress');
-        insert account;
+        List<Account> account = TestFactory.createAccountList(10, true);
 
-        Contact contact = new Contact(FirstName = 'Test', LastName = 'Contact', AccountId = account.Id);
-        insert contact;
+        List<Contact> contact = TestFactory.createContactList(10, true);
     }
 
     @isTest
@@ -32,7 +30,7 @@ public class CloneListUtilTest {
             Boolean ret1 = CloneListUtil.verifyChildObjectSelected(childObjects);
         Test.stopTest();
 
-        System.assert(ret1);
+        System.assertEquals(true, ret1, 'It should be true sObject is passes');
     }
 
     @isTest
@@ -49,7 +47,7 @@ public class CloneListUtilTest {
             Boolean ret2 = !CloneListUtil.verifyChildObjectSelected(childObjects);
         Test.stopTest();
 
-        System.assert(ret2);
+        System.assertEquals(true, ret2, 'It should be false sObject');
     }
 
     @isTest
@@ -61,7 +59,7 @@ public class CloneListUtilTest {
         Test.startTest();
             String actualObjectName = CloneListUtil.getObjectNameBasedOnPrefix(id);
         Test.stopTest();
-        System.assertEquals(expectedObjectName, actualObjectName);
+        System.assertEquals(expectedObjectName, actualObjectName, 'It should be a known object name as an account');
     }
 
     @IsTest
@@ -88,9 +86,9 @@ public class CloneListUtilTest {
     static void testGenerateSelectAllQuery() {
         // Test with all fileds to be queryable
         Account acc = new Account();
+        acc.Id = TestFactory.getFakeId(Account.SObjectType);
         acc.Name = 'Test Account';
         acc.Account_Status__c = 'in Progress';
-        insert acc;
         
         Test.startTest();
             String query = CloneListUtil.generateSelectAllQuery('Account', 'Name', acc.Id);
@@ -114,12 +112,11 @@ public class CloneListUtilTest {
     @isTest
     static void testCreateCloneChildRecords() {
         // Setup test data
-        Account account = [SELECT Id, Name, Account_Status__c FROM Account Where Name Like 'Test Account'];
 
-        Contact contact = [SELECT Id, FirstName, LastName, AccountId From Contact WHERE AccountId =:account.Id];
+        List<Contact> contactList = [SELECT Id, FirstName, LastName, AccountId From Contact LIMIT 10];
 
-        String sourceId = contact.Id;
-        String destinationId = account.Id;
+        String sourceId = contactList[0].Id;
+        String destinationId = contactList[0].AccountId;
 
         ChildRelationship childRelationship = new ChildRelationship();
         childRelationship.setSelected(true);
@@ -134,6 +131,5 @@ public class CloneListUtilTest {
         Test.stopTest();
         System.assert(errors.isEmpty());
     }
-
 }
 

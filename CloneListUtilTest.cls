@@ -53,7 +53,7 @@ public class CloneListUtilTest {
     @isTest
     static void testGetObjectNameBasedOnPrefix() {
         // Test with a known object prefix
-        String id = '001000000000000';
+        String id = TestFactory.getFakeId(Account.sObjectType);
         String expectedObjectName = 'Account';
 
         Test.startTest();

@@ -1,9 +1,9 @@
 /**
  * @description       : 
- * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @author            : Zaheer Khan
  * @group             : 
- * @last modified on  : 12-19-2022
- * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @last modified on  : 01-17-2023
+ * @last modified by  : Zaheer Khan
 **/
 @isTest (seeAllData = false)
 public with sharing class SOQLQueryBuilderTestTest {
@@ -11,56 +11,59 @@ public with sharing class SOQLQueryBuilderTestTest {
     @IsTest
     static void testMethodSOQLQueryBuilder() {
 
-        Contact con = new Contact();
-        con.id = TestFactory.getFakeId(Contact.SObjectType);
-        con.lastName = 'Test';
-        Account acc = new Account();
-        acc.Id = TestFactory.getFakeId(Account.SObjectType);
-        con.AccountId = acc.Id;
-        String sObjectName = 'account';
-        String fieldSetName = 'lastName';
+        //Test Data
+        List<Account> accList = TestFactory.createAccountList(10, false);
+        for (Account acc : accList) {
+            acc.Id = TestFactory.getFakeId(Account.SObjectType);
+        }
+        
+        accList[0].Name = 'TestAccount';
 
-        String nameField = 'lastName';
+        String sObjectName = 'Account';
+        String fieldSetName = 'Name';
+
+        String nameField = 'Name';
         List<String> extraResultFields = new List<String>();
-        extraResultFields.add('firstName');
+        extraResultFields.add('AccountNumber');
         extraResultFields.add('Phone');
         extraResultFields.add('Email');
-        extraResultFields.add('AccountId');
+        extraResultFields.add('Account_Status__c');
 
-        String conditionalString = 'lastName';
+        String conditionalString = 'AccountNumber';
 
-        String objectName = 'Contact';
-        List<List<String>> conditions = new List<List<String>>{new List<String> {'lastName','=', 'Test'}};
+        String objectName = 'Account';
+        List<List<String>> conditions = new List<List<String>>{new List<String> {'Name','=', 'Test'}};
         List<String> logicalOperators = new List<String>{'='};
-        String fieldForSearch = 'lastName'; 
-        String searchString = 'Test';
+        String fieldForSearch = 'AccountNumber'; 
+        String searchString = 'TestAccount';
 
         Integer recordLimit = 10;
         Integer recordOffSet = 10;
         String logicalOperators2 = 'Like';
-        String fieldNameToSort = 'lastName'; 
+        String fieldNameToSort = 'AccountNumber'; 
         String sortingDirection = 'ASC';
         
-        SOQLQueryBuilderTest sqbt = new SOQLQueryBuilderTest();
+        SOQLQueryBuilderTest soqlQueBuilderIns = new SOQLQueryBuilderTest();
         
         Test.startTest();
             SOQLQueryBuilderTest.getInstance();
-            sqbt.getFields();
-            sqbt.setFieldsUsingFieldSet(fieldSetName, sObjectName);
-            sqbt.setFields(nameField, extraResultFields);
-            sqbt.getfromSObjectType();
-            sqbt.setfromSObjectType(sObjectName);
-            sqbt.getWhereClause();
-            sqbt.setWhereClauseUsingSingleString(conditionalString);
-            sqbt.setWhereClause( objectName, conditions, logicalOperators, fieldForSearch, searchString);
-            sqbt.getOrderBy();
-            sqbt.setOrderBy('lastName', '');
-            sqbt.getRecordLimit();
-            sqbt.setRecordLimit(10);
-            sqbt.getRecordOffset();
-            sqbt.setRecordOffset(10);
-            sqbt.toQuery(sObjectName, nameField, conditionalString, fieldNameToSort, sortingDirection, recordLimit,  recordOffSet);
-            sqbt.toQuery(sObjectName, nameField, conditions, logicalOperators2, searchString, extraResultFields, fieldNameToSort, sortingDirection, recordLimit, recordOffSet);
+            soqlQueBuilderIns.getFields();
+            soqlQueBuilderIns.setFieldsUsingFieldSet(fieldSetName, sObjectName);
+            soqlQueBuilderIns.setFields(nameField, extraResultFields);
+            soqlQueBuilderIns.setFields(nameField, null);
+            soqlQueBuilderIns.getfromSObjectType();
+            soqlQueBuilderIns.setfromSObjectType(sObjectName);
+            soqlQueBuilderIns.getWhereClause();
+            soqlQueBuilderIns.setWhereClauseUsingSingleString(conditionalString);
+            soqlQueBuilderIns.setWhereClause( objectName, conditions, logicalOperators, fieldForSearch, searchString);
+            soqlQueBuilderIns.getOrderBy();
+            soqlQueBuilderIns.setOrderBy('lastName', '');
+            soqlQueBuilderIns.getRecordLimit();
+            soqlQueBuilderIns.setRecordLimit(10);
+            soqlQueBuilderIns.getRecordOffset();
+            soqlQueBuilderIns.setRecordOffset(10);
+            soqlQueBuilderIns.toQuery(sObjectName, nameField, conditionalString, fieldNameToSort, sortingDirection, recordLimit,  recordOffSet);
+            soqlQueBuilderIns.toQuery(sObjectName, nameField, conditions, logicalOperators2, searchString, extraResultFields, fieldNameToSort, sortingDirection, recordLimit, recordOffSet);
         Test.stopTest();
     }
 }
